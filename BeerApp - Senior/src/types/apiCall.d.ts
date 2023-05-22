@@ -1,9 +1,9 @@
 import { TYPE, SORT } from './';
 
 interface ApiParams {
-  per_page?: number; // Int between 1 and 200. Default is 50.
+  per_page?: number | string; // Int between 1 and 200. Default is 50.
   page?: number;
-  sort?: SORT; // Not working with by_dist.
+  sort?: string //name,type:ASC/DESC
   by_city?: string;
   by_dist?: string; // `${latitude as Number}, ${longitude as Number}`
   by_name?: string;
