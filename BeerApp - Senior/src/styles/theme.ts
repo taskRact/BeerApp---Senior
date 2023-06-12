@@ -1,24 +1,24 @@
+import { amber, brown } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
-import { green, blue } from '@mui/material/colors';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: blue[800],
+      main: brown.A700
     },
     secondary: {
-      main: green[500],
-    },
+      main: amber.A700
+    }
   },
   components: {
     MuiLink: {
       styleOverrides: {
         root: {
-          textDecoration: 'none',
-        },
-      },
-    },
-  },
+          textDecoration: 'none'
+        }
+      }
+    }
+  }
 });
 
 export { theme };

@@ -6,6 +6,7 @@ const fetchData = (setData: (data: Array<Beer>) => void) => {
   (async () => {
     try {
       const response = await getBeerList();
+
       setData(response.data);
     } catch (error) {
       handle(error);

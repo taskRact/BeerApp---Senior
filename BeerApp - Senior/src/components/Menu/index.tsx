@@ -1,19 +1,21 @@
+/* eslint-disable max-lines-per-function */
+import HomeIcon from '@mui/icons-material/Home';
+import SportsBar from '@mui/icons-material/SportsBar';
 import {
   Box,
   Divider,
   Drawer,
+  Link,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Toolbar,
-  Link,
+  Toolbar
 } from '@mui/material';
-import SportsBar from '@mui/icons-material/SportsBar';
-import HomeIcon from '@mui/icons-material/Home';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+
 import TopBar from '../TopBar';
 
 const drawerWidth = 240;
@@ -39,7 +41,7 @@ export default function ResponsiveDrawer(props: Props) {
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
-              <ListItemText primary='Home' />
+              <ListItemText primary="Home" />
             </ListItemButton>
           </ListItem>
         </Link>
@@ -49,7 +51,7 @@ export default function ResponsiveDrawer(props: Props) {
               <ListItemIcon>
                 <SportsBar />
               </ListItemIcon>
-              <ListItemText primary='Beer List' />
+              <ListItemText primary="Beer List" />
             </ListItemButton>
           </ListItem>
         </Link>
@@ -58,32 +60,53 @@ export default function ResponsiveDrawer(props: Props) {
   );
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{
+      display: 'flex'
+    }}>
       <TopBar drawerWidth={drawerWidth} handleDrawerToggle={handleDrawerToggle} />
       <Box
-        component='nav'
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-        aria-label='mailbox folders'
+        component="nav"
+        sx={{
+          width: {
+            sm: drawerWidth
+          },
+          flexShrink: {
+            sm: 0
+          }
+        }}
+        aria-label="mailbox folders"
       >
         <Drawer
-          variant='temporary'
+          variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true,
+            keepMounted: true
           }}
           sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            display: {
+              xs: 'block',
+              sm: 'none'
+            },
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: drawerWidth
+            }
           }}
         >
           {drawer}
         </Drawer>
         <Drawer
-          variant='permanent'
+          variant="permanent"
           sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            display: {
+              xs: 'none',
+              sm: 'block'
+            },
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: drawerWidth
+            }
           }}
           open
         >
@@ -91,11 +114,15 @@ export default function ResponsiveDrawer(props: Props) {
         </Drawer>
       </Box>
       <Box
-        component='main'
+        component="main"
         sx={{
           flexGrow: 1,
+          // eslint-disable-next-line id-length
           p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)`, background: '#f7f7f7' },
+          width: {
+            sm: `calc(100% - ${drawerWidth}px)`,
+            background: '#f7f7f7'
+          }
         }}
       >
         <Toolbar />
