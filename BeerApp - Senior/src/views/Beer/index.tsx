@@ -1,27 +1,37 @@
 /* eslint-disable max-lines-per-function */
 import BusinessIcon from '@mui/icons-material/Business';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import LinkIcon from '@mui/icons-material/Link';
 import PhoneRoundedIcon from '@mui/icons-material/PhoneRounded';
 import SegmentIcon from '@mui/icons-material/Segment';
 import { Link, Tooltip, Typography } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { useEffect, useState } from 'react';
-import { Link as RouterLink, useParams } from 'react-router-dom';
+import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 
 import ListWithIcon, { ListWithIconProps } from '../../components/ListWithIcon';
+import { useFavoriteBeers } from '../../hooks/useFavoriteBeers';
 import { Beer as IBeer } from '../../types';
 import { BeerMap } from './map';
 import { segments } from './segments';
 import { fetchData } from './utils';
 
-// import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-
 const Beer = () => {
   const { id } = useParams();
   const [beer, setBeer] = useState<IBeer>();
+  const [favoriteBeers, setFavoriteBeers] = useFavoriteBeers();
 
-  // eslint-disable-next-line
-  useEffect(fetchData.bind(this, setBeer, id), [id]);
+  const isFavorite = !!favoriteBeers[id!];
+  const navigate = useNavigate();
+  const toggleFavorite = () => setFavoriteBeers({
+    ...favoriteBeers,
+    [id!]: !isFavorite
+  });
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(fetchData.bind(null, setBeer, id), [id]);
 
   const items: ListWithIconProps['items'] = [
     {
@@ -67,7 +77,12 @@ const Beer = () => {
     <article>
       <section>
         <header>
-          <Typography variant="h2" marginBottom={6}>{beer?.name}</Typography>
+          <Typography variant="h2" marginBottom={6}>
+            {beer?.name}
+            <IconButton size="large" onClick={toggleFavorite}>
+              {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+            </IconButton>
+          </Typography>
         </header>
         <main>
           <Grid container>
@@ -80,9 +95,7 @@ const Beer = () => {
           </Grid>
         </main>
         <footer>
-          <RouterLink to=".." relative="path">
-            Back to the list
-          </RouterLink>
+          <button onClick={() => navigate(-1)}>Go back</button>
         </footer>
       </section>
     </article>
