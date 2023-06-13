@@ -1,10 +1,10 @@
-import { amber, brown } from '@mui/material/colors';
+import { amber, green } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: brown.A700
+      main: green['900']
     },
     secondary: {
       main: amber.A700

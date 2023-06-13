@@ -1,6 +1,9 @@
+import { Typography } from '@mui/material';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 
-export function LocationMap({ latlang }: { latlang: [number, number] }) {
+import { Beer } from '../../types';
+
+function LocationMap({ latlang }: { latlang: [number, number] }) {
   return (
     <MapContainer center={latlang} zoom={10} scrollWheelZoom={false}>
       <TileLayer
@@ -10,4 +13,16 @@ export function LocationMap({ latlang }: { latlang: [number, number] }) {
       <Marker position={latlang}></Marker>
     </MapContainer>
   );
+}
+
+export function BeerMap({ beer }: { beer?: Beer }) {
+  if (!beer || !beer.latitude) {
+    return (
+      <div/>
+
+    // <Typography variant="body1">No location provided</Typography>
+    );
+  }
+
+  return <LocationMap latlang={[parseFloat(beer.latitude), parseFloat(beer.longitude)]} />;
 }

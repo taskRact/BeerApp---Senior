@@ -34,7 +34,7 @@ const TopBar = (props: Props) => (
         <MenuIcon />
       </IconButton>
       <Typography variant="h6" noWrap component="div">
-          V
+         Beer Wiki
       </Typography>
     </Toolbar>
   </AppBar>

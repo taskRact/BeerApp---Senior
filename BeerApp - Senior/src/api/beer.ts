@@ -18,8 +18,9 @@ const getRandomBeerList = (size = 3) => axios.get(`${API}breweries/random`, {
     size
   }
 });
+const getSearchBeerUrl = (isAutoComplete = false) => `${API}breweries/${isAutoComplete ? 'autocomplete' : 'search'}`;
 
-const searchBeerList = (query: string, isAutoComplete = false) => axios.get(`${API}breweries/${isAutoComplete ? 'autocomplete' : 'search'}`, {
+const searchBeerList = (query: string, isAutoComplete = false) => axios.get(getSearchBeerUrl(isAutoComplete), {
   params: {
     query
   }
