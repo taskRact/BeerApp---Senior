@@ -4,6 +4,7 @@ import { Button, Paper } from '@mui/material';
 
 import BeerList from '../../components/BeerList';
 import { useFavoriteBeers } from '../../hooks/useFavoriteBeers';
+import { Beer } from '../../types';
 import styles from './favoriteBeerList.module.css';
 
 export function FavoriteBeerList() {
@@ -15,7 +16,7 @@ export function FavoriteBeerList() {
     .map(([id, name]) => ({
       id,
       name
-    })) as { id: string, name: string }[];
+    })) as Beer[];
 
   return (
 

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import axios from 'axios';
 
 import { ApiParams } from '../types';
@@ -20,9 +21,10 @@ const getRandomBeerList = (size = 3) => axios.get(`${API}breweries/random`, {
 });
 const getSearchBeerUrl = (isAutoComplete = false) => `${API}breweries/${isAutoComplete ? 'autocomplete' : 'search'}`;
 
-const searchBeerList = (query: string, isAutoComplete = false) => axios.get(getSearchBeerUrl(isAutoComplete), {
+const searchBeerList = (query: string, params?: ApiParams, isAutoComplete = false) => axios.get(getSearchBeerUrl(isAutoComplete), {
   params: {
-    query
+    query,
+    ...params
   }
 });
 

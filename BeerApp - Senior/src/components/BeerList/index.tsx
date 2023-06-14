@@ -1,26 +1,25 @@
-import { Box } from '@mui/material';
+import { Box, TableSortLabel } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useFavoriteBeers } from '../../hooks/useFavoriteBeers';
+import { Beer } from '../../types/beer';
 import { Favorite } from '../Favorite/Favorite';
 
 export interface BeerListProps {
-  items: { id: string, name: string }[]
-  showHeader?: boolean,
+  items: Beer[]
+  showControls?: boolean,
   favoriteBeers: Record<string, string | false>,
   setFavoriteBeers: ReturnType<typeof useFavoriteBeers>[1]
 }
 
 // eslint-disable-next-line max-lines-per-function
-export default function BeerList({ items, showHeader = false, favoriteBeers, setFavoriteBeers }: BeerListProps) {
+export default function BeerList({ items, showControls = false, favoriteBeers, setFavoriteBeers }: BeerListProps) {
   const toggleFavorite = (id: string, name: string) => setFavoriteBeers({
     ...favoriteBeers,
     [id!]: favoriteBeers[id] ? false : name
@@ -28,27 +27,27 @@ export default function BeerList({ items, showHeader = false, favoriteBeers, set
   const navigate = useNavigate();
   const onBeerClick = (id: string) => navigate(`/beer/${id}`);
 
-  const [page, setPage] = React.useState(0);
-  // eslint-disable-next-line no-magic-numbers
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const onPageChange = (event: unknown, newPage: number) => setPage(newPage);
-  const onRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const visibleItems = React.useMemo(() => items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-                                     [items, page, rowsPerPage]);
-
   return (
     <Box>
-      <TableContainer>
-        <Table>
-          {showHeader &&
+      <TableContainer sx={{
+        maxHeight: 600
+      }}>
+        <Table stickyHeader>
+          {showControls &&
             <TableHead>
               <TableRow>
-                <TableCell>Is favorite</TableCell>
-                <TableCell>Name</TableCell>
+                <TableCell>
+                  <TableSortLabel>Is favorite</TableSortLabel>
+                </TableCell>
+                <TableCell>
+                  <TableSortLabel>Name</TableSortLabel>
+                </TableCell>
+                <TableCell>
+                  <TableSortLabel>Country</TableSortLabel>
+                </TableCell>
+                <TableCell>
+                  <TableSortLabel>Type</TableSortLabel>
+                </TableCell>
               </TableRow>
             </TableHead>
           }
@@ -58,7 +57,7 @@ export default function BeerList({ items, showHeader = false, favoriteBeers, set
                 border: 0
               }
             }}>
-            {visibleItems.map((item) => (
+            {items.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>
                   <Favorite
@@ -67,18 +66,13 @@ export default function BeerList({ items, showHeader = false, favoriteBeers, set
                   />
                 </TableCell>
                 <TableCell onClick={() => onBeerClick(item.id)}>{item.name}</TableCell>
+                <TableCell onClick={() => onBeerClick(item.id)}>{item.country}</TableCell>
+                <TableCell onClick={() => onBeerClick(item.id)}>{item.brewery_type}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        count={items.length}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        onPageChange={onPageChange}
-        onRowsPerPageChange={onRowsPerPageChange}
-      />
     </Box>
   );
 }
