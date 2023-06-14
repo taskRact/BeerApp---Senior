@@ -43,7 +43,8 @@
       "react-app/jest"
     ],
     "rules": {
-      "id-denylist": ["off"]
+      "id-denylist": ["off"],
+      "no-shadow": ["error", { "allow": ["name"]}]
     }
   },
   "browserslist": {
