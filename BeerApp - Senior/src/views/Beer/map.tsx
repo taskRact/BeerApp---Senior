@@ -1,6 +1,8 @@
-import { Typography } from '@mui/material';
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import { Box, Paper, Typography } from '@mui/material';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 
+import { HeaderWithIcon } from '../../components/HeaderWithIcon';
 import { Beer } from '../../types';
 
 function LocationMap({ latlang }: { latlang: [number, number] }) {
@@ -18,11 +20,18 @@ function LocationMap({ latlang }: { latlang: [number, number] }) {
 export function BeerMap({ beer }: { beer?: Beer }) {
   if (!beer || !beer.latitude) {
     return (
-      <div/>
+      <div />
 
     // <Typography variant="body1">No location provided</Typography>
     );
   }
 
-  return <LocationMap latlang={[parseFloat(beer.latitude), parseFloat(beer.longitude)]} />;
+  return (
+    <Paper>
+      <Box padding={1}>
+        <HeaderWithIcon icon={<LocationOnOutlinedIcon />} label="Location" />
+      </Box>
+      <LocationMap latlang={[parseFloat(beer.latitude), parseFloat(beer.longitude)]} />
+    </Paper>
+  );
 }

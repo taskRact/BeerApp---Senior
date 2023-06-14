@@ -1,7 +1,9 @@
+/* eslint-disable max-lines-per-function */
 import SportsBar from '@mui/icons-material/SportsBar';
-import { Avatar, List, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
+// eslint-disable-next-line max-len
+import { Avatar, Button, Checkbox, Link, List, ListItemAvatar, ListItemButton, ListItemText, Paper, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 import { Beer } from '../../types';
 import { fetchData } from './utils';
@@ -34,6 +36,24 @@ const BeerList = () => {
               </ListItemButton>
             ))}
           </List>
+          <Paper>
+            <div>
+              <div>
+                <TextField label="Filter..." variant="outlined" />
+                <Button variant="contained" onClick={fetchData.bind(null, setBeerList)}>Reload list</Button>
+              </div>
+              <ul>
+                {beerList.map((beer, index) => (
+                  <li key={index.toString()}>
+                    <Checkbox />
+                    <Link component={RouterLink} to={`/beer/${beer.id}`}>
+                      {beer.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Paper>
         </main>
       </section>
     </article>

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Button, Typography } from '@mui/material';
+import { Box, Button, Divider, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { Favorite } from '../../components/Favorite/Favorite';
 import { useFavoriteBeers } from '../../hooks/useFavoriteBeers';
 import { Beer as IBeer } from '../../types';
 import { BeerDetails } from './beerDetails';
+import { GoodToKnow } from './goodToKnow';
 import { BeerMap } from './map';
 import { fetchData } from './utils';
 
@@ -21,7 +22,7 @@ const Beer = () => {
   const navigate = useNavigate();
   const toggleFavorite = () => setFavoriteBeers({
     ...favoriteBeers,
-    [id!]: !isFavorite
+    [id!]: isFavorite ? false : beer!.name
   });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -37,12 +38,15 @@ const Beer = () => {
           </Typography>
         </header>
         <main>
-          <Grid container>
+          <Grid container marginBottom={5} spacing={2}>
             <Grid md={6} xs={12}>
               <BeerDetails beer={beer} />
-              <Button onClick={() => navigate(-1)}>
-                <ArrowBackIcon />  Go back
-              </Button>
+              <GoodToKnow type={beer?.brewery_type} />
+              <Box marginTop={5}>
+                <Button variant="contained" startIcon={<ArrowBackIcon />} onClick={() => navigate('/beer')}>
+                  Back to the list
+                </Button>
+              </Box>
             </Grid>
             <Grid md={6} xs={12} >
               <BeerMap beer={beer} />

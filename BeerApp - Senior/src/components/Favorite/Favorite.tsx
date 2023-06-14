@@ -10,8 +10,14 @@ export interface FavoriteProps {
 export function Favorite({ isFavorite, toggleFavorite }: FavoriteProps) {
   return (
 
-    <IconButton size="large" onClick={toggleFavorite}>
-      {isFavorite ? <FavoriteIcon color="secondary" /> : <FavoriteBorderIcon color="secondary" />}
+    <IconButton size="large" onClick={toggleFavorite} title={`${isFavorite ? 'Remove from ' : 'Add to '}saved`}>
+      {isFavorite ? <FavoriteIcon style={{
+        width: '1.5em',
+        height: '1.5em'
+      }} /> : <FavoriteBorderIcon style={{
+        width: '1.5em',
+        height: '1.5em'
+      }} />}
     </IconButton>
   );
 }

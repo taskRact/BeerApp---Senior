@@ -3,16 +3,39 @@ import BusinessIcon from '@mui/icons-material/Business';
 import LinkIcon from '@mui/icons-material/Link';
 import PhoneRoundedIcon from '@mui/icons-material/PhoneRounded';
 import SegmentIcon from '@mui/icons-material/Segment';
-import { Link, Tooltip, Typography } from '@mui/material';
+import { Box, Link, Paper, Tooltip, Typography } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import { ReactNode } from 'react';
 
-import ListWithIcon, { ListWithIconProps } from '../../components/ListWithIcon';
 import { Beer as IBeer } from '../../types';
-import { segments } from './segments';
+import { segments } from './consts';
+
+export interface ListWithIconProps {
+  items: {
+    icon: JSX.Element,
+    title: string,
+    children: ReactNode
+  }[]
+}
+
+const ListWithIcon = ({ items }: ListWithIconProps) => (
+  <Paper>
+    <Box padding={2}>
+      {items.filter(({ children }) => !!children).map(({ icon, title, children }) => (
+        <Grid container key={title} marginBottom={1}>
+          <Grid marginRight={2}>{icon}</Grid>
+          <Grid xs={2}>{title}</Grid>
+          <Grid>{children}</Grid>
+        </Grid>
+      ))}
+    </Box>
+  </Paper>
+);
 
 export function BeerDetails({ beer }: { beer?: IBeer }) {
   const items: ListWithIconProps['items'] = [
     {
-      icon: <SegmentIcon color="secondary" />,
+      icon: <SegmentIcon/>,
       title: 'Type',
       children:
 
@@ -24,17 +47,17 @@ export function BeerDetails({ beer }: { beer?: IBeer }) {
         </Tooltip>
     },
     {
-      icon: <LinkIcon color="secondary" />,
+      icon: <LinkIcon/>,
       title: 'Website',
       children: beer?.website_url && <Link noWrap href={beer.website_url}>{beer.website_url}</Link>
     },
     {
-      icon: <PhoneRoundedIcon color="secondary" />,
+      icon: <PhoneRoundedIcon/>,
       title: 'Phone',
       children: beer?.phone && <Link href={`tel:${beer.phone}`}>{beer.phone}</Link>
     },
     {
-      icon: <BusinessIcon color="secondary" />,
+      icon: <BusinessIcon/>,
       title: 'Address',
       children: <>
         <Typography variant="body1">
