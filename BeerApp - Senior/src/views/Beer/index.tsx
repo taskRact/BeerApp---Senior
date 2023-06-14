@@ -44,7 +44,7 @@ const Beer = () => {
               <GoodToKnow type={beer?.brewery_type} />
               <Box marginTop={5}>
                 <Button variant="contained" startIcon={<ArrowBackIcon />} onClick={() => navigate('/beer')}>
-                  Back to the list
+                  Go to the beer list
                 </Button>
               </Box>
             </Grid>
