@@ -1,11 +1,9 @@
-/* eslint-disable max-lines-per-function */
-// eslint-disable-next-line max-len
 import { Button, Paper } from '@mui/material';
 
-import BeerList from '../../components/BeerList';
 import { useFavoriteBeers } from '../../hooks/useFavoriteBeers';
 import { Beer } from '../../types';
 import styles from './favoriteBeerList.module.css';
+import SelectedListItem from './test';
 
 export function FavoriteBeerList() {
   const [favoriteBeers, setFavoriteBeers] = useFavoriteBeers();
@@ -28,12 +26,9 @@ export function FavoriteBeerList() {
             Remove all items
           </Button>
         </div>
-        <BeerList
-          items={favoriteList}
-          favoriteBeers={favoriteBeers}
-          setFavoriteBeers={setFavoriteBeers}
-        />
       </div>
+      <SelectedListItem items={favoriteList}/>
     </Paper>
   );
 }
+
