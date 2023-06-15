@@ -1,8 +1,6 @@
 import { Box, Button, List, ListItem, Paper, Typography } from '@mui/material';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Favorite } from '../../components/Favorite/Favorite';

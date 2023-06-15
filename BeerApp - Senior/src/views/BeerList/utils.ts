@@ -1,4 +1,4 @@
-import { getBeerList, getBeerMetaData, searchBeerList } from '../../api';
+import { getBeerList, getBeerMetaData } from '../../api';
 import { ApiParams, Beer } from '../../types';
 import handle from '../../utils/error';
 

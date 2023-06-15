@@ -1,9 +1,10 @@
-import { Box, Paper, TextField } from '@mui/material';
+import { Paper } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { useDebounce } from '../../hooks/useDebounce';
 import { ApiParams, Beer, SORT } from '../../types';
-import BeerListTable, { type SortFields } from './BeerListTable';
+import BeerListTable from './BeerListTable';
+import { SortFields } from './consts';
 import { fetchData, fetchMetadata } from './utils';
 
 const nextOrder = {

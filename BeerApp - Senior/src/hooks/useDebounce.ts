@@ -14,7 +14,7 @@ export const useDebounce = (callback: Function, milliSeconds = 250) => {
     };
 
     return debounce(func, milliSeconds);
-  }, []);
+  }, [milliSeconds]);
 
   return debouncedCallback;
 };

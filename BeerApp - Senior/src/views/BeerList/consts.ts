@@ -1,4 +1,4 @@
-import { ApiParams, Beer, SORT } from '../../types';
+import { ApiParams, Beer } from '../../types';
 
 export type SortFields = keyof Beer | 'type';
 
