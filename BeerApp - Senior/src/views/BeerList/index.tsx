@@ -1,102 +1,71 @@
-import SearchIcon from '@mui/icons-material/Search';
-import { Backdrop, Box, Paper, TextField } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
-import TablePagination from '@mui/material/TablePagination';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import BeerList from '../../components/BeerList';
-import { useDebounce } from '../../hooks/useDebounce';
-import { useFavoriteBeers } from '../../hooks/useFavoriteBeers';
 import { Beer } from '../../types';
-import { fetchData, fetchMetadata, fetchSearchData } from './utils';
+import BeerListTable, { type Order, type SortFields } from './BeerListTable';
 
-// eslint-disable-next-line max-lines-per-function
-const BeerListView = () => {
-  const [beerList, setBeerList] = useState<Array<Beer>>([]);
-  const [favoriteBeers, setFavoriteBeers] = useFavoriteBeers();
+const nextOrder = {
+  asc: 'desc',
+  desc: 'none',
+  none: 'asc'
+} as Record<Order, Order>;
 
-  const [page, setPage] = useState(0);
-  const [total, setTotal] = useState(0);
+function sortItems(items: Beer[], order: Order, orderBy: SortFields) {
+  if (order === 'none') {
+    return items;
+  }
+
+  const orderNumber = order === 'asc' ? 1 : -1;
+
+  // eslint-disable-next-line no-undefined
+  if (orderBy === undefined) {
+    return items;
+  }
+
+  const comparator = (a: Beer, b: Beer) => {
+    const valA = a[orderBy]!;
+    const valB = b[orderBy]!;
+    const result = valA.localeCompare(valB);
+
+    return result * orderNumber;
+  };
+
+  return [...items].sort(comparator);
+}
+
+export default function BeerListView() {
   const [isLoading, setLoading] = useState(false);
+  const [items, setItems] = useState<Array<Beer>>([]);
+  const [order, setOrder] = useState<Order>('none');
+  const [orderBy, setOrderBy] = useState<SortFields>('name');
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const onPageChange = (event: unknown, newPage: number) => setPage(newPage);
-  const onRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+  const [total, setTotal] = useState(0);
+
+  const setSort = (id: SortFields) => {
+    const newOrder: Order = orderBy === id ? nextOrder[order] : 'asc';
+
+    setOrderBy(id);
+    setOrder(newOrder);
+  };
+
+  const onRowsPerPageChange = (newRowsPerPage: number) => {
+    setRowsPerPage(newRowsPerPage);
     setPage(0);
   };
 
-  function fetchWithLoader() {
-    setLoading(true);
-    if (filterValue) {
-      fetchSearchData((newBeerList) => {
-        setBeerList(newBeerList);
-        setLoading(false);
-        setTotal(newBeerList.length);
-      }, filterValue, {
-        page,
-        per_page: rowsPerPage // eslint-disable-line camelcase
-      });
-    } else {
-      fetchData((newBeerList) => {
-        setBeerList(newBeerList);
-        setLoading(false);
-      }, {
-        page,
-        per_page: rowsPerPage // eslint-disable-line camelcase
-      });
-    }
-  }
-
-  const [filterValue, setFilterValue] = useState('');
-  const debouncedRequest = useDebounce(fetchWithLoader);
-
-  useEffect(() => fetchMetadata(setTotal), []);
-  useEffect(debouncedRequest, [filterValue, page, rowsPerPage, debouncedRequest]);
+  const sortedItems = useMemo(() => sortItems(items, order, orderBy), [items, order, orderBy]);
 
   return (
-    <article>
-      <section>
-        <header>
-          <h1>BeerList page</h1>
-        </header>
-        <main>
-          <Paper sx={{
-            position: 'relative'
-          }}>
-            <Backdrop open={isLoading} sx={{
-              position: 'absolute',
-              zIndex: (theme) => theme.zIndex.drawer + 1
-            }}> <CircularProgress /></Backdrop>
-            <Box padding={2} sx={{
-              display: 'flex',
-              alignItems: 'flex-end'
-            }}>
-              <SearchIcon />
-              <TextField
-                placeholder="Filter"
-                variant="standard"
-                onChange={(ev) => setFilterValue(ev.target.value)}
-              />
-            </Box>
-            <BeerList
-              items={beerList}
-              favoriteBeers={favoriteBeers}
-              showControls={true}
-              setFavoriteBeers={setFavoriteBeers}
-            />
-            <TablePagination
-              component="div"
-              count={total}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onPageChange={onPageChange}
-              onRowsPerPageChange={onRowsPerPageChange}
-            />
-          </Paper>
-        </main>
-      </section>
-    </article>
+    <BeerListTable
+      items={sortedItems}
+      setPage={setPage}
+      setRowsPerPage={onRowsPerPageChange}
+      order={order}
+      orderBy={orderBy}
+      page={page}
+      rowsPerPage={rowsPerPage}
+      setSort={setSort}
+      total={total}
+    />
   );
-};
-
-export default BeerListView;
+}

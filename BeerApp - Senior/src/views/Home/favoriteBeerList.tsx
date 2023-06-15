@@ -1,4 +1,4 @@
-import { Box, Button, List, Paper, Typography } from '@mui/material';
+import { Box, Button, List, ListItem, Paper, Typography } from '@mui/material';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -38,12 +38,12 @@ export function FavoriteBeerList() {
       </Box>
       <List>
         {favoriteList.map(({ id, name }) => (
-          <ListItemButton key={id} >
+          <ListItem key={id} >
             <ListItemIcon>
               <Favorite toggleFavorite={() => toggleFavorite(id, name)} isFavorite={!!favoriteBeers[id]} />
             </ListItemIcon>
-            <ListItemText primary={name} onClick={() => navigate(`/beer/${id}`)} />
-          </ListItemButton>
+            <ListItemButton onClick={() => navigate(`/beer/${id}`)}>{name}</ListItemButton>
+          </ListItem>
         ))}
       </List>
     </Paper>

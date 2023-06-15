@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Box, Button, Divider, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';

@@ -47,6 +47,9 @@
       "id-denylist": [
         "off"
       ],
+      "camelcase": [
+        "off"
+      ],
       "no-shadow": [
         "error",
         {
