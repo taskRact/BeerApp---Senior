@@ -4,5 +4,12 @@ import { useLocalStorage } from './useLocalStorage';
 export type FavoriteBeers = Record<Beer['id'], Beer['name'] | false>
 
 export function useFavoriteBeers() {
-  return useLocalStorage<FavoriteBeers>('favoriteBeers', {});
+  const [favoriteBeers, setFavoriteBeers] = useLocalStorage<FavoriteBeers>('favoriteBeers', {});
+
+  const toggleFavorite = (id: string, name: string) => setFavoriteBeers({
+    ...favoriteBeers,
+    [id!]: favoriteBeers[id] ? false : name
+  });
+
+  return [favoriteBeers, setFavoriteBeers, toggleFavorite] as const;
 }

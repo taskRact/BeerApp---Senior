@@ -1,14 +1,21 @@
-import { Button, Paper } from '@mui/material';
+import { Box, Button, List, Paper, Typography } from '@mui/material';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 
+import { Favorite } from '../../components/Favorite/Favorite';
 import { useFavoriteBeers } from '../../hooks/useFavoriteBeers';
 import { Beer } from '../../types';
-import styles from './favoriteBeerList.module.css';
-import SelectedListItem from './test';
+
+export interface BeerListProps {
+  items: Beer[]
+}
 
 export function FavoriteBeerList() {
-  const [favoriteBeers, setFavoriteBeers] = useFavoriteBeers();
-
-  const removeAllItems = () => setFavoriteBeers({});
+  const [favoriteBeers, setFavoriteBeers, toggleFavorite] = useFavoriteBeers();
+  const navigate = useNavigate();
   const favoriteList = Object.entries(favoriteBeers)
     .filter(([, beerName]) => beerName !== false)
     .map(([id, name]) => ({
@@ -19,15 +26,26 @@ export function FavoriteBeerList() {
   return (
 
     <Paper>
-      <div className={styles.listContainer}>
-        <div className={styles.listHeader}>
-          <h3>Favorite beers</h3>
-          <Button variant="contained" size="small" onClick={removeAllItems}>
+      <Box sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }} padding={2}>
+        <Typography variant="h6">Saved breweries</Typography>
+        <Button variant="contained" size="small" onClick={() => setFavoriteBeers({})}>
             Remove all items
-          </Button>
-        </div>
-      </div>
-      <SelectedListItem items={favoriteList}/>
+        </Button>
+      </Box>
+      <List>
+        {favoriteList.map(({ id, name }) => (
+          <ListItemButton key={id} >
+            <ListItemIcon>
+              <Favorite toggleFavorite={() => toggleFavorite(id, name)} isFavorite={!!favoriteBeers[id]} />
+            </ListItemIcon>
+            <ListItemText primary={name} onClick={() => navigate(`/beer/${id}`)} />
+          </ListItemButton>
+        ))}
+      </List>
     </Paper>
   );
 }

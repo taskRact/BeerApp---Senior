@@ -1,5 +1,3 @@
-import BeerList from '../../components/BeerList';
-import { useFavoriteBeers } from '../../hooks/useFavoriteBeers';
 import { FavoriteBeerList } from './favoriteBeerList';
 import { Welcome } from './welcome';
 

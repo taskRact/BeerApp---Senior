@@ -18,7 +18,7 @@ export function Welcome() {
 
   return (
     <Paper>
-      <Box padding={1} marginBottom={2}>
+      <Box padding={2} marginBottom={2}>
         {text.length ? <ReactMarkdown>{text}</ReactMarkdown> : <Skeleton variant="rectangular" height={500}></Skeleton>}
         <Button variant="contained" startIcon={<SearchIcon />} size="large" onClick={() => navigate('/beer')}>
           Find a brewery!

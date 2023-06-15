@@ -16,14 +16,10 @@ import { fetchData } from './utils';
 const Beer = () => {
   const { id } = useParams();
   const [beer, setBeer] = useState<IBeer>();
-  const [favoriteBeers, setFavoriteBeers] = useFavoriteBeers();
+  const [favoriteBeers, , toggleFavorite] = useFavoriteBeers();
 
   const isFavorite = !!favoriteBeers[id!];
   const navigate = useNavigate();
-  const toggleFavorite = () => setFavoriteBeers({
-    ...favoriteBeers,
-    [id!]: isFavorite ? false : beer!.name
-  });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(fetchData.bind(null, setBeer, id), [id]);
@@ -34,7 +30,7 @@ const Beer = () => {
         <header>
           <Typography variant="h2" marginBottom={6}>
             {beer?.name}
-            <Favorite toggleFavorite={toggleFavorite} isFavorite={isFavorite} />
+            <Favorite toggleFavorite={() => toggleFavorite(beer!.id, beer!.name)} isFavorite={isFavorite} />
           </Typography>
         </header>
         <main>
