@@ -1,7 +1,10 @@
+import WifiOffIcon from '@mui/icons-material/WifiOff';
 import { useEffect, useState } from 'react';
 
+import { HeaderWithIcon } from '../../components/HeaderWithIcon';
+
 const Offline = () => {
-  const [isOnline, setIsOnline] = useState(true);
+  const [isOnline, setIsOnline] = useState<Boolean>(navigator.onLine);
 
   const setOnline = () => setIsOnline(true);
   const setOffline = () => setIsOnline(false);
@@ -20,7 +23,7 @@ const Offline = () => {
     <article>
       <section>
         <header>
-          <h1>You are offline</h1>
+          <HeaderWithIcon icon={<WifiOffIcon/>} label="You are offline" />
         </header>
         <main>
           <span>App needs internet to start working</span>

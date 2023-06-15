@@ -29,7 +29,7 @@ export function FavoriteBeerList() {
         alignItems: 'center',
         justifyContent: 'space-between'
       }} padding={2}>
-        <Typography variant="h6">Saved breweries</Typography>
+        <Typography variant="h6" component="h4">Saved breweries</Typography>
         <Button variant="contained" size="small" onClick={() => setFavoriteBeers({})}>
             Remove all items
         </Button>
