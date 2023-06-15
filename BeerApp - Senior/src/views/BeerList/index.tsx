@@ -1,71 +1,75 @@
-import { useMemo, useState } from 'react';
+import { Box, Paper, TextField } from '@mui/material';
+import { useEffect, useState } from 'react';
 
-import { Beer } from '../../types';
-import BeerListTable, { type Order, type SortFields } from './BeerListTable';
+import { useDebounce } from '../../hooks/useDebounce';
+import { ApiParams, Beer, SORT } from '../../types';
+import BeerListTable, { type SortFields } from './BeerListTable';
+import { fetchData, fetchMetadata } from './utils';
 
 const nextOrder = {
   asc: 'desc',
   desc: 'none',
   none: 'asc'
-} as Record<Order, Order>;
+} as Record<SORT, SORT>;
 
-function sortItems(items: Beer[], order: Order, orderBy: SortFields) {
-  if (order === 'none') {
-    return items;
-  }
-
-  const orderNumber = order === 'asc' ? 1 : -1;
-
-  // eslint-disable-next-line no-undefined
-  if (orderBy === undefined) {
-    return items;
-  }
-
-  const comparator = (a: Beer, b: Beer) => {
-    const valA = a[orderBy]!;
-    const valB = b[orderBy]!;
-    const result = valA.localeCompare(valB);
-
-    return result * orderNumber;
-  };
-
-  return [...items].sort(comparator);
-}
-
+// eslint-disable-next-line max-lines-per-function
 export default function BeerListView() {
-  const [isLoading, setLoading] = useState(false);
-  const [items, setItems] = useState<Array<Beer>>([]);
-  const [order, setOrder] = useState<Order>('none');
+  const [beerList, setBeerList] = useState<Array<Beer>>([]);
+  const [order, setOrder] = useState<SORT>('none');
   const [orderBy, setOrderBy] = useState<SortFields>('name');
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [total, setTotal] = useState(0);
+  const [filterParams, setFilterParams] = useState<ApiParams>({
+    per_page: 10,
+    page: 1
+  });
+
+  const fetchMetadataDebounced = useDebounce(() => fetchMetadata(setTotal, filterParams));
+  const fetchDataDebounced = useDebounce(() => fetchData(setBeerList, {
+    ...filterParams,
+    sort: order === 'none' ? undefined : `${orderBy}:${order}`
+  }));
+
+  useEffect(fetchMetadataDebounced, [fetchMetadataDebounced, filterParams]);
+  useEffect(fetchDataDebounced, [fetchDataDebounced, filterParams, order, orderBy]);
+
+  const setPage = (newPage: number) => setFilterParams({
+    ...filterParams,
+    page: newPage
+  });
+
+  const setRowsPerPage = (per_page: number) => setFilterParams({
+    ...filterParams,
+    per_page,
+    page: 0
+  });
 
   const setSort = (id: SortFields) => {
-    const newOrder: Order = orderBy === id ? nextOrder[order] : 'asc';
+    const newOrder: SORT = orderBy === id ? nextOrder[order] : 'asc';
 
     setOrderBy(id);
     setOrder(newOrder);
   };
 
-  const onRowsPerPageChange = (newRowsPerPage: number) => {
-    setRowsPerPage(newRowsPerPage);
-    setPage(0);
-  };
-
-  const sortedItems = useMemo(() => sortItems(items, order, orderBy), [items, order, orderBy]);
+  const setFilterBy = (id: keyof ApiParams, value: string) => setFilterParams({
+    ...filterParams,
+    page: 0,
+    [id]: value.length > 0 ? value : undefined
+  });
 
   return (
-    <BeerListTable
-      items={sortedItems}
-      setPage={setPage}
-      setRowsPerPage={onRowsPerPageChange}
-      order={order}
-      orderBy={orderBy}
-      page={page}
-      rowsPerPage={rowsPerPage}
-      setSort={setSort}
-      total={total}
-    />
+    <Paper>
+      <BeerListTable
+        items={beerList}
+        order={order}
+        orderBy={orderBy}
+        page={filterParams.page!}
+        rowsPerPage={filterParams.per_page!}
+        total={total}
+        setPage={setPage}
+        setRowsPerPage={setRowsPerPage}
+        setSort={setSort}
+        setFilterBy={setFilterBy}
+      />
+    </Paper>
   );
 }

@@ -1,7 +1,7 @@
 import debounce from '@mui/material/utils/debounce';
 import { useEffect, useMemo, useRef } from 'react';
 
-export const useDebounce = (callback: Function, milliSeconds = 1000) => {
+export const useDebounce = (callback: Function, milliSeconds = 250) => {
   const ref = useRef<Function>();
 
   useEffect(() => {

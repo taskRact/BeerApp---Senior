@@ -50,6 +50,9 @@
       "camelcase": [
         "off"
       ],
+      "no-undefined": [
+        "off"
+      ],
       "no-shadow": [
         "error",
         {

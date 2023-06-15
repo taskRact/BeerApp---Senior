@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 /* eslint-disable max-lines-per-function */
-import { Box, TableSortLabel } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, TableSortLabel, TextField } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,54 +11,71 @@ import TableRow from '@mui/material/TableRow';
 import { ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Beer } from '../../types';
+import { ApiParams, Beer, SORT } from '../../types';
+import { Column, columns, SortFields, types } from './consts';
 
-export type Order = 'asc' | 'desc' | 'none';
-
-export type SortFields = keyof Beer;
-
-interface Columns {
-  id: SortFields,
-  label: string
+interface ColumnProps {
+  order: SORT
+  orderBy: SortFields
+  setSort: (id: SortFields) => void
+  setFilterBy: (id: keyof ApiParams, value: string) => void
 }
 
-const columns: Columns[] = [
-  {
-    id: 'name',
-    label: 'Name'
-  }, {
-    id: 'country',
-    label: 'Country'
-  }, {
-    id: 'brewery_type',
-    label: 'Type'
-  }
-];
-
-interface Props {
+interface TableProps extends ColumnProps {
   total: number
   page: number
   rowsPerPage: number
   setPage: (page: number) => void
   setRowsPerPage: (page: number) => void
-
   items: Beer[]
-  order: Order
-  orderBy: SortFields
-
-  setSort: (id: SortFields) => void
 }
 
-export default function BeerListTable(props: Props) {
+function HeaderCell({ column, order, orderBy, setSort, setFilterBy }: ColumnProps & { column: Column }) {
+  const { id, label, sortKey, filterKey } = column;
+
+  return (
+    <TableCell key={id}>
+      <TableSortLabel
+        active={orderBy === sortKey && order !== 'none'}
+        // eslint-disable-next-line no-nested-ternary, no-undefined
+        direction={orderBy === sortKey ? order === 'none' ? undefined : order : 'asc'}
+        onClick={() => setSort(sortKey)}
+      >
+        {id === 'brewery_type' ? <FormControl variant="standard" size="small" sx={{
+          width: 100
+        }}>
+          <InputLabel>Type</InputLabel>
+          <Select
+            onChange={(ev) => setFilterBy(filterKey, ev.target.value as string)}
+            label="Type"
+          >
+            <MenuItem value="">any</MenuItem>
+            {types.map((type) => <MenuItem key={type} value={type}>{type}</MenuItem>)}
+          </Select>
+        </FormControl> : <TextField
+          label={label}
+          size="small"
+          variant="standard"
+          onChange={(ev) => setFilterBy(filterKey, ev.target.value)}
+          onClick={(ev) => ev.stopPropagation()}
+        />}
+      </TableSortLabel>
+
+    </TableCell>
+  );
+}
+
+export default function BeerListTable(props: TableProps) {
   const {
-    items,
     setPage,
     setRowsPerPage,
+    setSort,
+    setFilterBy,
+    items,
     order,
     orderBy,
     page,
     rowsPerPage,
-    setSort,
     total
   } = props;
 
@@ -72,16 +89,13 @@ export default function BeerListTable(props: Props) {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              {columns.map(({ id, label }) => (
-                <TableCell key={id}>
-                  <TableSortLabel
-                    active={orderBy === id && order !== 'none'}
-                    // eslint-disable-next-line no-nested-ternary, no-undefined
-                    direction={orderBy === id ? order === 'none' ? undefined : order : 'asc'}
-                    onClick={() => setSort(id)}
-                  >{label}</TableSortLabel>
-                </TableCell>
-              ))}
+              {columns.map((column) => <HeaderCell
+                column={column}
+                setSort={setSort}
+                setFilterBy={setFilterBy}
+                order={order}
+                orderBy={orderBy}
+              />)}
             </TableRow>
           </TableHead>
           <TableBody
@@ -91,8 +105,10 @@ export default function BeerListTable(props: Props) {
               }
             }}>
             {items.map((item) => (
-              <TableRow key={item.id} onClick={() => navigate(`/beer/${item.id}`)}>
-                {columns.map(({ id }) => <TableCell>{item[id]}</TableCell>)}
+              <TableRow key={item.id} onClick={() => navigate(`/beer/${item.id}`)} sx={{
+                cursor: 'pointer'
+              }}>
+                {columns.map(({ id }) => <TableCell key={id}>{item[id]}</TableCell>)}
               </TableRow>
             ))}
           </TableBody>

@@ -1,9 +1,9 @@
-import { SORT, TYPE } from './';
+import { Beer, SORT, TYPE } from './';
 
 interface ApiParams {
   per_page?: number; // Int between 1 and 200. Default is 50.
   page?: number;
-  sort?: SORT; // Not working with by_dist.
+  sort?: `${keyof Beer | 'type'}:${SORT}`; // Not working with by_dist.
   by_city?: string;
   by_dist?: string; // `${latitude as Number}, ${longitude as Number}`
   by_name?: string;

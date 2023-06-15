@@ -14,22 +14,10 @@ const fetchData = (setData: (data: Array<Beer>) => void, params?: ApiParams) => 
   })();
 };
 
-const fetchSearchData = (setData: (data: Array<Beer>) => void, query: string, params?: ApiParams) => {
+const fetchMetadata = (setData: (total: number) => void, params?: ApiParams) => {
   (async () => {
     try {
-      const response = await searchBeerList(query, params);
-
-      setData(response.data);
-    } catch (error) {
-      handle(error);
-    }
-  })();
-};
-
-const fetchMetadata = (setData: (total: number) => void) => {
-  (async () => {
-    try {
-      const response = await getBeerMetaData();
+      const response = await getBeerMetaData(params);
 
       setData(parseInt(response.data.total, 10));
     } catch (error) {
@@ -38,4 +26,4 @@ const fetchMetadata = (setData: (total: number) => void) => {
   })();
 };
 
-export { fetchData, fetchMetadata, fetchSearchData };
+export { fetchData, fetchMetadata };
