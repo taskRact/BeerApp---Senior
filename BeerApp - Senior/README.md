@@ -12,10 +12,8 @@ We will discuss the proposed solution during the interview. You should be ready 
 
 ## Questions
 - Why extra folder?
-- 
-
 
 ## TODO
 - skeletons
-- pwa 
+- better offline support 
 - tests would be awesome

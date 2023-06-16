@@ -10,54 +10,36 @@ import { ReactNode } from 'react';
 import { Beer as IBeer } from '../../types';
 import { segments } from './consts';
 
-export interface ListWithIconProps {
-  items: {
-    icon: JSX.Element,
-    title: string,
-    children: ReactNode
-  }[]
-}
-
-const ListWithIcon = ({ items }: ListWithIconProps) => (
-  <Paper>
-    <Box padding={2}>
-      {items.filter(({ children }) => !!children).map(({ icon, title, children }) => (
-        <Grid container key={title} marginBottom={1}>
-          <Grid marginRight={2}>{icon}</Grid>
-          <Grid xs={2}>{title}</Grid>
-          <Grid>{children}</Grid>
-        </Grid>
-      ))}
-    </Box>
-  </Paper>
-);
+type ListWithIcon = {
+  icon: JSX.Element,
+  title: string,
+  children: ReactNode
+}[]
 
 export function BeerDetails({ beer }: { beer?: IBeer }) {
-  const items: ListWithIconProps['items'] = [
+  const items: ListWithIcon = [
     {
-      icon: <SegmentIcon/>,
+      icon: <SegmentIcon />,
       title: 'Type',
       children:
-
         <Tooltip title={segments[beer?.brewery_type ?? 'planning']}>
           <div>
             <Typography variant="body1">{beer?.brewery_type}</Typography>
-            {/* <HelpOutlineIcon /> */}
           </div>
         </Tooltip>
     },
     {
-      icon: <LinkIcon/>,
+      icon: <LinkIcon />,
       title: 'Website',
       children: beer?.website_url && <Link noWrap href={beer.website_url}>{beer.website_url}</Link>
     },
     {
-      icon: <PhoneRoundedIcon/>,
+      icon: <PhoneRoundedIcon />,
       title: 'Phone',
       children: beer?.phone && <Link href={`tel:${beer.phone}`}>{beer.phone}</Link>
     },
     {
-      icon: <BusinessIcon/>,
+      icon: <BusinessIcon />,
       title: 'Address',
       children: <>
         <Typography variant="body1">
@@ -73,5 +55,19 @@ export function BeerDetails({ beer }: { beer?: IBeer }) {
     }
   ];
 
-  return <ListWithIcon items={items} />;
+  return (
+    <Paper>
+      <Box padding={2}>
+        {
+          items.filter(({ children }) => !!children).map(({ icon, title, children }) => (
+            <Grid container key={title} marginBottom={1}>
+              <Grid marginRight={2}>{icon}</Grid>
+              <Grid xs={2}>{title}</Grid>
+              <Grid>{children}</Grid>
+            </Grid>
+          ))
+        }
+      </Box>
+    </Paper>
+  );
 }
