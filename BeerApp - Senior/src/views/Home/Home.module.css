@@ -13,3 +13,15 @@
   align-items: center;
   justify-content: space-between;
 }
+.pagination {
+  display: flex;
+}
+.button {
+  margin-right: 20px;
+}
+.listitem {
+  background-color: blue;
+}
+.listitembeer {
+  color:blue;
+}
