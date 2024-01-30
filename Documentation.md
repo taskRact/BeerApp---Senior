@@ -24,4 +24,6 @@
 
 ### Pagination: The beer list is paginated, and you can navigate between pages using the pagination component at the bottom of the page.
 
-# That's it! You can now run and check the project by following these steps. Feel free to explore the code and make any necessary modifications or enhancements.
+### PerPage: The beer list is designed with perPage, Default is 50 and total data is 200, and you can navigate PerPage using the perPage dropdown at the top of the page.
+
+# That's it! You can now run and check the project by following these steps.
