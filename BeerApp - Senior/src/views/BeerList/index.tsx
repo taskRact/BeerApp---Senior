@@ -29,6 +29,28 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
+const breweryTypes =  [
+    'ALL',
+    'micro',
+    'nano',
+    'regional',
+    'brewpub',
+    'large',
+    'planning',
+    'bar',
+    'contract',
+    'proprietor',
+    'closed'
+  ]
+  
+  const perPageOptions =  [
+    '10',
+    '20',
+    '50',
+    '100',
+    '200'
+  ]
+
 
 const StyledMenu = styled((props: MenuProps) => (
     <Menu
@@ -304,40 +326,13 @@ const BeerList = () => {
                         open={isOpen}
                         onClose={handleTypeClose}
                     >
-
-                        <MenuItem onClick={handleTypeChange.bind(this, 'micro')} disableRipple>
-                            Micro
-                        </MenuItem>
-                        <MenuItem onClick={handleTypeChange.bind(this, 'bar')} disableRipple>
-                            Bar
-                        </MenuItem>
-                        <MenuItem onClick={handleTypeChange.bind(this, 'nano')} disableRipple>
-                            Nano
-                        </MenuItem>
-                        <MenuItem onClick={handleTypeChange.bind(this, 'regional')} disableRipple>
-                            Regional
-                        </MenuItem>
-                        <MenuItem onClick={handleTypeChange.bind(this, 'brewpub')} disableRipple>
-                            Brewpub
-                        </MenuItem>
-                        <MenuItem onClick={handleTypeChange.bind(this, 'bar')} disableRipple>
-                            Bar
-                        </MenuItem>
-                        <MenuItem onClick={handleTypeChange.bind(this, 'large')} disableRipple>
-                            Large
-                        </MenuItem>
-                        <MenuItem onClick={handleTypeChange.bind(this, 'planning')} disableRipple>
-                            Planning
-                        </MenuItem>
-                        <MenuItem onClick={handleTypeChange.bind(this, 'contract')} disableRipple>
-                            Contract
-                        </MenuItem>
-                        <MenuItem onClick={handleTypeChange.bind(this, 'proprietor')} disableRipple>
-                            Proprietor
-                        </MenuItem>
-                        <MenuItem onClick={handleTypeChange.bind(this, 'closed')} disableRipple>
-                            Closed
-                        </MenuItem>
+                        
+                        {breweryTypes.map((type) => (
+                            <MenuItem onClick={handleTypeChange.bind(this, type)} disableRipple>
+                                <FilterAltIcon />
+                                {type}
+                            </MenuItem>
+                        ))}
                     </StyledMenu>
                     <StyledMenu
                             id="demo-customized-menu1"
@@ -380,27 +375,13 @@ const BeerList = () => {
                             open={IsOpen}
                             onClose={handlePerPageClose}
                         >
-
-                            <MenuItem onClick={handlePerPageOption.bind(this, 20)} disableRipple>
-                                <FilterAltIcon />
-                                20
-                            </MenuItem>
-                            <MenuItem onClick={handlePerPageOption.bind(this, 50)} disableRipple>
-                                <FilterAltIcon />
-                                50
-                            </MenuItem>
-                            <MenuItem onClick={handlePerPageOption.bind(this, 100)} disableRipple>
-                                <FilterAltIcon />
-                                100
-                            </MenuItem>
-                            <MenuItem onClick={handlePerPageOption.bind(this, 150)} disableRipple>
-                                <FilterAltIcon />
-                                150
-                            </MenuItem>
-                            <MenuItem onClick={handlePerPageOption.bind(this, 200)} disableRipple>
-                                <FilterAltIcon />
-                                200
-                            </MenuItem>
+                            { perPageOptions.map((option) => (
+                                    <MenuItem onClick={handlePerPageOption.bind(this, Number(option))} disableRipple>
+                                        <FilterAltIcon />
+                                        {option}
+                                    </MenuItem>
+                                )
+                            )}
                         </StyledMenu>
                     <List>
                         {beerList.map((beer) => (

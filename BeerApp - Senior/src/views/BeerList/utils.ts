@@ -1,4 +1,4 @@
-import { getBeerList } from '../../api';
+import { getBeerList, getBeerMetaData } from '../../api';
 import { Beer, SORT, TYPE } from '../../types';
 import handle from '../../utils/error';
 import { ApiParams } from '../../types'; // Import the 'ApiParams' type
@@ -23,9 +23,13 @@ const fetchData = async (
                 ...(by_type && { by_type: by_type as TYPE })
             };
             console.log(params);
-            const response = await getBeerList(params);
+            const [response, metadata] = await Promise.all([
+                getBeerList(params), 
+                getBeerMetaData(params)
+            ]); 
+            getBeerList(params);
             setData(response.data);
-            return 200;
+            return metadata.data.total;
         } catch (error) {
             handle(error);
         }
