@@ -1,4 +1,4 @@
-import { getRandomBeerList } from '../../api';
+import { getRandomBeerList, getFavouriteListByIds } from '../../api';
 import { Beer } from '../../types';
 import handle from '../../utils/error';
 
@@ -13,4 +13,16 @@ const fetchData = (setData: (data: Array<Beer>) => void) => {
   })();
 };
 
-export { fetchData };
+const fetchFavouriteData = (setData: (data: Array<Beer>) => void) => {
+    (async () => {
+        try {
+            let favouriteIds = JSON.parse(localStorage.getItem('favouriteList') || "").join(',');
+            if (!favouriteIds) return setData([]);
+            const { data } = await getFavouriteListByIds(favouriteIds);
+            setData(data);
+        } catch (error) {
+            handle(error);
+        }
+    })();
+};
+export { fetchData, fetchFavouriteData };
