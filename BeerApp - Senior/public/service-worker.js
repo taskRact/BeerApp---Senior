@@ -1,5 +1,5 @@
 // public/service-worker.js
-
+const CACHE_NAME = 'beer-app-cache';
 self.addEventListener('install', (event) => {
         const urlsToCache = [
             '/',
@@ -8,7 +8,7 @@ self.addEventListener('install', (event) => {
         ];
     
         event.waitUntil(
-            caches.open('my-cache').then((cache) => {
+            caches.open(CACHE_NAME).then((cache) => {
                 return cache.addAll(urlsToCache);
             })
         );
@@ -21,7 +21,7 @@ self.addEventListener('install', (event) => {
             // If the fetch is successful, clone the response and cache it
             if (response.ok) {
                 const clone = response.clone();
-                caches.open('my-cache').then((cache) => {
+                caches.open(CACHE_NAME).then((cache) => {
                     cache.put(event.request, clone);
                 });
             }
