@@ -208,6 +208,7 @@ const BeerList = () => {
         const sortOrder = sort.split(':')[1];
         setSort(`type,${filter_by}:${sortOrder}`);
         setFilter('');
+        setSortType('');
     };
 
     const handleTypeChange = (type?: string) => {
@@ -259,12 +260,14 @@ const BeerList = () => {
                         )}
                        
                         <Box flexGrow={0.1} />
-                        <TextField
-                            label="Search"
-                            variant="outlined"
-                            value={filter}
-                            onChange={handleFilterChange}
-                        />
+                        { filterBy !== 'type' && (
+                            <TextField
+                                label="Search"
+                                variant="outlined"
+                                value={filter}
+                                onChange={handleFilterChange}
+                            />
+                        )}
                         <Box flexGrow={8} />
                         <Button
                             id="demo-customized-butto3"
