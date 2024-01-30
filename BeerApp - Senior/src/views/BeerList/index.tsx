@@ -30,7 +30,6 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
 const breweryTypes =  [
-    'ALL',
     'micro',
     'nano',
     'regional',
@@ -92,8 +91,6 @@ const StyledMenu = styled((props: MenuProps) => (
         },
     },
 }));
-
-// const ITEMS_PER_PAGE = 50;
 
 const BeerList = () => {
     const navigate = useNavigate();
@@ -167,7 +164,6 @@ const BeerList = () => {
     const handleSortChange = (sort_by?: string) => {
         // Toggle between 'asc' and 'desc' when the sort button is clicked
         const baseSort = filterBy ? `type,${filterBy}:${sort_by}` : `type,name:${sort_by}`;
-        // setSortType(sort_by ?? '');
         setSort((prevSort) => (prevSort === baseSort ? `${baseSort}:asc` : baseSort));
     };
 
@@ -318,7 +314,7 @@ const BeerList = () => {
                         </MenuItem>
                     </StyledMenu>
                     <StyledMenu
-                        id="demo-customized-men2"
+                        id="demo-customized-menu2"
                         MenuListProps={{
                             'aria-labelledby': 'demo-customized-butto2',
                         }}

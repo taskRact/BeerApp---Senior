@@ -60,7 +60,7 @@ const Beer = () => {
                     </Typography>
                     {beer?.latitude && beer?.longitude && (
                         <div>
-                            <Map lat={Number(beer.latitude)} lang={Number(beer.longitude)} />
+                            <Map lat={Number(beer.latitude)} lang={Number(beer.longitude)} name={beer.name} />
                             <Typography variant="h6" component="h6" className={styles.subheading}>Coordinate: {+(beer.latitude)}, {+(beer.longitude)}</Typography>
                         </div>
                     )}
