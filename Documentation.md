@@ -22,6 +22,8 @@
 
 ### Save beers as favorites: Click on the heart icon next to a beer to save it as a favorite. The favorite beers will be stored in the browser's local storage.
 
+### Save beer as Favorites: can remove the Favorites from the Home page single or Multiple. If nothing selected and click on the button then it will throw an error.
+
 ### Pagination: The beer list is paginated, and you can navigate between pages using the pagination component at the bottom of the page.
 
 ### PerPage: The beer list is designed with perPage, Default is 50 and total data is 200, and you can navigate PerPage using the perPage dropdown at the top of the page.
