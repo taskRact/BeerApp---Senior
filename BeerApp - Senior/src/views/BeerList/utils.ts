@@ -22,7 +22,6 @@ const fetchData = async (
                 ...(by_postal_code && { by_postal_code }),
                 ...(by_type && { by_type: by_type as TYPE })
             };
-            console.log(params);
             const [response, metadata] = await Promise.all([
                 getBeerList(params), 
                 getBeerMetaData(params)
