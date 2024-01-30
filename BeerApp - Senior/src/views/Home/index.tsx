@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchData, fetchFavouriteData } from './utils';
+import { fetchData, fetchFavouriteData, searchBreweries } from './utils';
 import { Beer } from '../../types';
 import { Link as RouterLink } from 'react-router-dom';
 import { Button, Checkbox, Paper, TextField, Link, Stack, Alert } from '@mui/material';
@@ -10,6 +10,7 @@ const Home = () => {
   const [savedList, setSavedList] = useState<Array<Beer>>([]);
   const [selectedItems, setSelectedItems] = useState<Array<string>>([]);
   const [isError, setIsError] = useState<boolean>(false);
+  const [search, setSearch] = useState('');
 
   // eslint-disable-next-line
   useEffect(fetchData.bind(this, setBeerList), []);
@@ -31,6 +32,15 @@ const Home = () => {
     }
   }
 
+  const refreshList = () => {
+    fetchData(setBeerList);
+  };
+
+  const handleSearchBreweries = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+    searchBreweries(setBeerList, search);
+  }
+
   const selectedItem = (id: string) => {
     if (selectedItems.includes(id)) {
         const filteredItemsIds = selectedItems.filter((item) => item !== id);
@@ -47,8 +57,8 @@ const Home = () => {
           <Paper>
             <div className={styles.listContainer}>
               <div className={styles.listHeader}>
-                <TextField label='Filter...' variant='outlined' />
-                <Button variant='contained'>Reload list</Button>
+                <TextField onChange={handleSearchBreweries} label='Filter...' variant='outlined' />
+                <Button variant='contained' onClick={refreshList}>Reload list</Button>
               </div>
               <ul className={styles.list}>
                 {beerList.map((beer, index) => (
