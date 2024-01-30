@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react';
 import { Beer as IBeer } from '../../types';
 import { fetchData } from './utils';
 import { useParams } from 'react-router-dom';
-import { Typography, IconButton } from '@mui/material';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
+import { Typography, IconButton, Paper } from '@mui/material';
 import Map from './Map';
 import saveAsFavourite from '../../utils/favoritesUtils';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import styles from './Beer.module.css';
 
 const Beer = () => {
     const { id } = useParams();
@@ -28,56 +27,46 @@ const Beer = () => {
     };
 
     return (
-        <Box sx={{ flexGrow: 1, padding: 3 }}>
-            <h2>Beer Details</h2>
-            <Grid container spacing={3}>
-                <Grid item xs={12} md={5}>
-                    <article>
-                        <section>
-                            <Typography variant="h4" gutterBottom>
-                                {beer?.name} <IconButton onClick={saveFavourite.bind(this, beer?.id ?? "")} color="primary" size="large">
-                                    {favourite.includes(beer?.id ?? '') ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                                </IconButton>
-                            </Typography>
-                            <Typography variant="body1">
-                                <b>Type:</b> {beer?.brewery_type}
-                            </Typography>
-                            <Typography variant="body1">
-                                <b>Street:</b> {beer?.street}
-                            </Typography>
-                            <Typography variant="body1">
-                                <b>City:</b> {beer?.city}
-                            </Typography>
-                            <Typography variant="body1">
-                                <b>State:</b> {beer?.state}
-                            </Typography>
-                            <Typography variant="body1">
-                                <b>Postal Code:</b> {beer?.postal_code}
-                            </Typography>
-                            <Typography variant="body1">
-                                <b>Country:</b> {beer?.country}
-                            </Typography>
-                            <Typography variant="body1">
-                                <b>Longitude:</b> {beer?.longitude}
-                            </Typography>
-                            <Typography variant="body1">
-                                <b>Latitude:</b> {beer?.latitude}
-                            </Typography>
-                            <Typography variant="body1">
-                                <b>Phone:</b> {beer?.phone}
-                            </Typography>
-                            <Typography variant="body1">
-                                <b>Website:</b> {beer?.website_url}
-                            </Typography>
-                        </section>
-                    </article>
-                </Grid>
-                <Grid item xs={12} md={7}>
-                    {beer?.latitude && beer?.longitude && <Map lat={Number(beer.latitude)} lang={Number(beer.longitude)} />}
-                </Grid>
-            </Grid>
-        </Box>
-
+        <Paper className={styles.root}>
+            {beer && (
+                <div className={styles.cardContent}>
+                    <Typography variant="h3" component="h3" className={styles.title}>
+                        {beer?.name} <IconButton onClick={saveFavourite.bind(this, beer?.id ?? "")} color="primary" size="large">
+                            {favourite.includes(beer?.id ?? '') ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                        </IconButton>
+                    </Typography>
+                    <Typography variant="h4" component="h4" className={styles.subtitle}>
+                        Type: {beer?.brewery_type}
+                    </Typography>
+                    <Typography className={styles.subheading}>Website:</Typography>
+                    <Typography variant="body2" component="p">
+                        {beer?.website_url
+                            ? (<a href={beer?.website_url} target='_blank' rel="noreferrer">{beer?.website_url}</a>)
+                            : ('No website available')
+                        }
+                    </Typography>
+                    <Typography className={styles.subheading}>Phone:</Typography>
+                    <Typography variant="body2" component="p">
+                        {beer?.phone
+                            ? (<a href="tel:{beer?.phone}">{beer?.phone}</a>)
+                            : ('No phone available')
+                        }
+                    </Typography>
+                    <Typography variant="h4" component="h4" className={styles.subheading}>Location:</Typography>
+                    <Typography variant="body2" component="p">
+                        {beer?.street}, {beer?.postal_code}
+                        <br />{beer?.city}, {beer?.state}
+                        <br />{beer?.country}
+                    </Typography>
+                    {beer?.latitude && beer?.longitude && (
+                        <div>
+                            <Map lat={Number(beer.latitude)} lang={Number(beer.longitude)} />
+                            <Typography variant="h6" component="h6" className={styles.subheading}>Coordinate: {+(beer.latitude)}, {+(beer.longitude)}</Typography>
+                        </div>
+                    )}
+                </div>
+            )}
+        </Paper>
     );
 };
 
