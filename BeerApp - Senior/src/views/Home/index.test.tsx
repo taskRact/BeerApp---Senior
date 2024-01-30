@@ -1,30 +1,63 @@
-import { render, screen } from '@testing-library/react';
-import Home from './index';
-import userEvent from '@testing-library/user-event';
+// home.test.tsx
+import { render, screen, fireEvent } from "@testing-library/react";
+import { BrowserRouter } from "react-router-dom";
 
-test('renders Home', async () => {
-  render(<Home />);
-  expect(screen.getByText('Reload list')).toBeInTheDocument();
-});
+import Home from "./index";
 
-test('checks the type of Home component', async () => {
-  render(<Home />);
-  expect(typeof Home).toBe('function');
-});
+import { fetchData, fetchFavouriteData } from "./utils";
 
-test('search functionality in Home component', async () => {
-  render(<Home />);
+jest.mock("./utils", () => ({
+  fetchData: jest.fn(),
+  fetchFavouriteData: jest.fn(),
+  searchBreweries: jest.fn(),
+}));
 
-  // Find the search TextField by its label
-  const searchInput = screen.getByLabelText('Filter...') as HTMLInputElement;
+describe("Home Component", () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
 
-  // Simulate typing into the search field
-  userEvent.type(searchInput, 'IPA');
+  it("renders Home component correctly", () => {
+    render(
+      <BrowserRouter>
+        <Home />
+      </BrowserRouter>
+    );
 
-  // Assert that the search input field's value has been updated
-  expect(searchInput.value).toBe('IPA');
-});
+    // Ensure elements are rendered
+    expect(screen.getByLabelText("Filter...")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Reload list" })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Saved items" })
+    ).toBeInTheDocument();
+  });
 
-afterEach(() => {
-  jest.resetAllMocks();
+  it("fetches data on component mount", async () => {
+    render(
+      <BrowserRouter>
+        <Home />
+      </BrowserRouter>
+    );
+
+    // Expect fetchData and fetchFavouriteData to be called
+    expect(fetchData).toHaveBeenCalled();
+    expect(fetchFavouriteData).toHaveBeenCalled();
+  });
+
+  it("displays error alert when trying to remove without selecting items", () => {
+    render(
+      <BrowserRouter>
+        <Home />
+      </BrowserRouter>
+    );
+
+    // Click the "Remove all items" button without selecting items
+    fireEvent.click(screen.getByRole("button", { name: "Remove all items" }));
+
+    // Expect error alert to be displayed
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+  });
+
 });
