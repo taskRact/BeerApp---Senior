@@ -25,7 +25,7 @@ const fetchData = async (
             console.log(params);
             const response = await getBeerList(params);
             setData(response.data);
-            return 50;
+            return 200;
         } catch (error) {
             handle(error);
         }

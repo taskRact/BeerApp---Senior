@@ -71,7 +71,7 @@ const StyledMenu = styled((props: MenuProps) => (
     },
 }));
 
-const ITEMS_PER_PAGE = 50;
+// const ITEMS_PER_PAGE = 50;
 
 const BeerList = () => {
     const navigate = useNavigate();
@@ -87,14 +87,15 @@ const BeerList = () => {
     const [state, setState] = useState<string>('');
     const [postal_code, setPostalCode] = useState<string>('');
     const [sortType, setSortType] = useState<string>('');
+    const [ItemsPerPage, setItemsPerPage] = useState<number>(50);
 
     useEffect(() => {
-        fetchData(setBeerList, currentPage, ITEMS_PER_PAGE, sort, name, city, state, postal_code, sortType).then((totalItems) => {
-            setTotalPages(Math.ceil(Number(totalItems) / ITEMS_PER_PAGE));
+        fetchData(setBeerList, currentPage, ItemsPerPage, sort, name, city, state, postal_code, sortType).then((totalItems) => {
+            setTotalPages(Math.ceil(Number(totalItems) / ItemsPerPage));
         });
         let data = JSON.parse(localStorage.getItem('favouriteList') || '[]');
         setFavourite(data);
-    }, [currentPage, filter, sort, name, city, state, postal_code, sortType]);
+    }, [currentPage, ItemsPerPage, filter, sort, name, city, state, postal_code, sortType]);
 
     const onBeerClick = (id: string) => navigate(`/beer/${id}`);
 
@@ -172,8 +173,17 @@ const BeerList = () => {
         setAnchorType(event.currentTarget);
     };
     const handleTypeClose = () => {
-        setAnchorFilter(null);
+        setAnchorType(null);
     };
+
+    const [anchorPerPage, setAnchorPerPage] = React.useState<null | HTMLElement>(null);
+    const IsOpen = Boolean(anchorPerPage);
+    const handlePerPage = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorPerPage(event.currentTarget);
+    };
+    const handlePerPageClose = () => {
+        setAnchorPerPage(null);
+    }
 
     const handleSelectFilterOption = (filter_by?: string) => {
         setFilterBy(filter_by ?? '');
@@ -184,6 +194,11 @@ const BeerList = () => {
 
     const handleTypeChange = (type?: string) => {
         setSortType(type ?? '');
+    }
+
+    const handlePerPageOption = (ItemsPerPage: number) => {
+        setItemsPerPage(ItemsPerPage ?? '');
+        setCurrentPage(1);
     }
 
     return (
@@ -232,6 +247,20 @@ const BeerList = () => {
                             value={filter}
                             onChange={handleFilterChange}
                         />
+                        <Box flexGrow={8} />
+                        <Button
+                            id="demo-customized-butto3"
+                            aria-controls={IsOpen ? 'demo-customized-men3' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={IsOpen ? 'true' : undefined}
+                            variant="contained"
+                            disableElevation
+                            onClick={handlePerPage}
+                            className={styles.buttonaAlignment}
+                            endIcon={<KeyboardArrowDown />}
+                        >
+                            <SortIcon /> { ItemsPerPage === 20 ? '20' : ItemsPerPage === 50 ? '50' : ItemsPerPage === 100 ? '100' : ItemsPerPage === 150 ? '150' : ItemsPerPage === 200 ? '200' : '50'}
+                        </Button>
                         <Box flexGrow={1} /> {/* Adjust the margin value as needed */}
                         <Button
                             id="demo-customized-button"
@@ -339,6 +368,38 @@ const BeerList = () => {
                             <MenuItem onClick={handleSelectFilterOption.bind(this, 'type')} disableRipple>
                                 <FilterAltIcon />
                                 Type
+                            </MenuItem>
+                        </StyledMenu>
+
+                        <StyledMenu
+                            id="demo-customized-menu3"
+                            MenuListProps={{
+                                'aria-labelledby': 'demo-customized-button3',
+                            }}
+                            anchorEl={anchorPerPage}
+                            open={IsOpen}
+                            onClose={handlePerPageClose}
+                        >
+
+                            <MenuItem onClick={handlePerPageOption.bind(this, 20)} disableRipple>
+                                <FilterAltIcon />
+                                20
+                            </MenuItem>
+                            <MenuItem onClick={handlePerPageOption.bind(this, 50)} disableRipple>
+                                <FilterAltIcon />
+                                50
+                            </MenuItem>
+                            <MenuItem onClick={handlePerPageOption.bind(this, 100)} disableRipple>
+                                <FilterAltIcon />
+                                100
+                            </MenuItem>
+                            <MenuItem onClick={handlePerPageOption.bind(this, 150)} disableRipple>
+                                <FilterAltIcon />
+                                150
+                            </MenuItem>
+                            <MenuItem onClick={handlePerPageOption.bind(this, 200)} disableRipple>
+                                <FilterAltIcon />
+                                200
                             </MenuItem>
                         </StyledMenu>
                     <List>
