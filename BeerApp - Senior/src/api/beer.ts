@@ -6,6 +6,8 @@ const getBeer = (id: string) => axios.get(`${API}breweries/${id}`);
 
 const getBeerList = (params?: ApiParams) => axios.get(`${API}breweries/`, { params });
 
+const getFavouriteListByIds = (by_ids: string) => axios.get(`${API}breweries`, { params: { by_ids } });
+
 /**
  * @param size Int between 1 and 50. Default is 3.
  * @returns New promise with api call for random beer list.
@@ -22,4 +24,4 @@ const searchBeerList = (query: string, isAutoComplete = false) =>
 
 const getBeerMetaData = (params?: ApiParams) => axios.get(`${API}breweries/meta`, { params });
 
-export { getBeer, getBeerList, getRandomBeerList, searchBeerList, getBeerMetaData };
+export { getBeer, getBeerList, getRandomBeerList, searchBeerList, getBeerMetaData, getFavouriteListByIds };

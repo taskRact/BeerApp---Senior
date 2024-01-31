@@ -9,6 +9,11 @@ const Offline = () => {
   useEffect(() => {
     window.addEventListener('online', setOnline);
     window.addEventListener('offline', setOffline);
+    if (navigator.onLine) {
+        setOnline();
+    } else {
+        setOffline();
+    }
 
     return () => {
       window.addEventListener('online', setOnline);
@@ -23,7 +28,7 @@ const Offline = () => {
           <h1>You are offline</h1>
         </header>
         <main>
-          <span>App needs internet to start working</span>
+          <span>Saved items are availble only</span>
         </main>
       </section>
     </article>
