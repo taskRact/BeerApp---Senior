@@ -1,0 +1,21 @@
+root {
+    margin: 'auto';
+    padding: '20px'
+  }
+  .title {
+    font-weight: 'bold';
+    font-size: '3rem';
+    margin-top: '10px';
+  }
+  .subtitle {
+    font-size: '2rem';
+    margin-bottom: '10px';
+  }
+  .subheading {
+    font-size: '1.75rem';
+    margin-top: '20px';
+  }
+  .cardContent {
+    display: 'flex';
+    padding: 1.5rem;
+  }
