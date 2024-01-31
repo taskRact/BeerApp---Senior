@@ -2,7 +2,7 @@ import { getRandomBeerList, getFavouriteListByIds, searchBeerList } from '../../
 import { Beer } from '../../types';
 import handle from '../../utils/error';
 
-const fetchData = (setData: (data: Array<Beer>) => void) => {
+const fetchData = async (setData: (data: Array<Beer>) => void) => {
   (async () => {
     try {
       const { data } = await getRandomBeerList(10);
@@ -13,7 +13,7 @@ const fetchData = (setData: (data: Array<Beer>) => void) => {
   })();
 };
 
-const fetchFavouriteData = (setData: (data: Array<Beer>) => void) => {
+const fetchFavouriteData = async (setData: (data: Array<Beer>) => void) => {
     (async () => {
         try {
             let favouriteIds = JSON.parse(localStorage.getItem('favouriteList') || "").join(',');
@@ -26,7 +26,7 @@ const fetchFavouriteData = (setData: (data: Array<Beer>) => void) => {
     })();
 };
 
-const searchBreweries = (setData: (data: Array<Beer>) => void, query: string) => {
+const searchBreweries = async (setData: (data: Array<Beer>) => void, query: string) => {
     (async () => {
       try {
         const { data } = await searchBeerList(query);

@@ -15,6 +15,7 @@ import {
     Typography,
     IconButton,
     Box,
+    CircularProgress,
 } from '@mui/material';
 import SportsBar from '@mui/icons-material/SportsBar';
 import { useNavigate } from 'react-router-dom';
@@ -98,7 +99,7 @@ const BeerList = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [filter, setFilter] = useState<string>('');
-    const [sort, setSort] = useState<string>('type,name:desc');
+    const [sort, setSort] = useState<string>('name:desc');
     const [filterBy, setFilterBy] = useState<string>('name');
     const [favourite, setFavourite] = useState<Array<string>>([]);
     const [name, setName] = useState<string>('');
@@ -107,14 +108,22 @@ const BeerList = () => {
     const [postal_code, setPostalCode] = useState<string>('');
     const [sortType, setSortType] = useState<string>('');
     const [ItemsPerPage, setItemsPerPage] = useState<number>(50);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        fetchData(setBeerList, currentPage, ItemsPerPage, sort, name, city, state, postal_code, sortType).then((totalItems) => {
-            setTotalPages(Math.ceil(Number(totalItems) / ItemsPerPage));
-        });
+        setLoading(true);
+        fetchData(setBeerList, currentPage, ItemsPerPage, sort, name, city, state, postal_code, sortType)
+            .then((totalItems) => {
+                setTotalPages(Math.ceil(Number(totalItems) / ItemsPerPage));
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    
         let data = JSON.parse(localStorage.getItem('favouriteList') || '[]');
         setFavourite(data);
     }, [currentPage, ItemsPerPage, filter, sort, name, city, state, postal_code, sortType]);
+    
 
     const onBeerClick = (id: string) => navigate(`/beer/${id}`);
 
@@ -162,9 +171,14 @@ const BeerList = () => {
     };
 
     const handleSortChange = (sort_by?: string) => {
-        // Toggle between 'asc' and 'desc' when the sort button is clicked
-        const baseSort = filterBy ? `type,${filterBy}:${sort_by}` : `type,name:${sort_by}`;
-        setSort((prevSort) => (prevSort === baseSort ? `${baseSort}:asc` : baseSort));
+        setSort((prevSort) => {
+            // Toggle between 'asc' and 'desc'
+            const newSortOrder = prevSort.endsWith(':asc') ? 'desc' : 'asc';
+    
+            const sortBy = filterBy === 'type' ? 'type' : filterBy === city ? 'city' : filterBy === state ? 'state' : filterBy === postal_code ? 'postal_code' : 'name';
+            return `${sortBy}:${newSortOrder}`;
+        });
+        
     };
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -206,7 +220,7 @@ const BeerList = () => {
     const handleSelectFilterOption = (filter_by?: string) => {
         setFilterBy(filter_by ?? '');
         const sortOrder = sort.split(':')[1];
-        setSort(`type,${filter_by}:${sortOrder}`);
+        setSort(`${filter_by}:${sortOrder}`);
         setFilter('');
         setSortType('');
     };
@@ -280,7 +294,7 @@ const BeerList = () => {
                             className={styles.buttonaAlignment}
                             endIcon={<KeyboardArrowDown />}
                         >
-                            <SortIcon /> { ItemsPerPage === 20 ? '20' : ItemsPerPage === 50 ? '50' : ItemsPerPage === 100 ? '100' : ItemsPerPage === 150 ? '150' : ItemsPerPage === 200 ? '200' : '50'}
+                            <SortIcon /> { ItemsPerPage === 10 ? '10' : ItemsPerPage === 20 ? '20' : ItemsPerPage === 50 ? '50' : ItemsPerPage === 100 ? '100' : ItemsPerPage === 150 ? '150' : ItemsPerPage === 200 ? '200' : '50'}
                         </Button>
                         <Box flexGrow={1} /> {/* Adjust the margin value as needed */}
                         <Button
@@ -294,7 +308,7 @@ const BeerList = () => {
                             className={styles.buttonaAlignment}
                             endIcon={<KeyboardArrowDown />}
                         >
-                            <SortIcon /> Sort {sort === 'type,name:asc' ? 'Asc' : 'Desc'}
+                            <SortIcon /> Sort {sort === 'name:asc' ? 'Asc' : 'Desc'}
                         </Button>
                     </Box>
                     <StyledMenu
@@ -382,23 +396,31 @@ const BeerList = () => {
                                 )
                             )}
                         </StyledMenu>
-                    <List>
-                        {beerList.map((beer) => (
-                            <ListItemButton key={beer.id}>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <SportsBar />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText key={beer.id} onClick={onBeerClick.bind(this, beer.id)} primary={beer.name} secondary={beer.brewery_type} />
-                                <Typography variant="h4" gutterBottom>
-                                    <IconButton onClick={saveFavourite.bind(this, beer?.id ?? "")} color="primary" size="large">
-                                        {favourite.includes(beer?.id ?? '') ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                                    </IconButton>
-                                </Typography>
-                            </ListItemButton>
-                        ))}
-                    </List>
+                    {loading ? (
+                        <Box display="flex" justifyContent="center" alignItems="center" height="200px">
+                            <CircularProgress />
+                        </Box>
+                    ) : (
+                    <>
+                        <List>
+                            {beerList.map((beer) => (
+                                <ListItemButton key={beer.id}>
+                                    <ListItemAvatar>
+                                        <Avatar>
+                                            <SportsBar />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText key={beer.id} onClick={onBeerClick.bind(this, beer.id)} primary={beer.name} secondary={beer.brewery_type} />
+                                    <Typography variant="h4" gutterBottom>
+                                        <IconButton onClick={saveFavourite.bind(this, beer?.id ?? "")} color="primary" size="large">
+                                            {favourite.includes(beer?.id ?? '') ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                                        </IconButton>
+                                    </Typography>
+                                </ListItemButton>
+                            ))}
+                        </List>
+                    </>
+                    )}
                     <Box display="flex" justifyContent="center" marginTop={2}>
                         <Pagination
                             count={totalPages}

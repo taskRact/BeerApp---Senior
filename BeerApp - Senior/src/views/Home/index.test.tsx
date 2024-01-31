@@ -1,63 +1,73 @@
 // home.test.tsx
 import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
+import { act } from "react-dom/test-utils";
 
 import Home from "./index";
 
 import { fetchData, fetchFavouriteData } from "./utils";
 
 jest.mock("./utils", () => ({
-  fetchData: jest.fn(),
-  fetchFavouriteData: jest.fn(),
-  searchBreweries: jest.fn(),
+    fetchData: jest.fn(),
+    fetchFavouriteData: jest.fn(),
+    searchBreweries: jest.fn(),
 }));
 
 describe("Home Component", () => {
-  beforeEach(() => {
-    localStorage.clear();
-  });
+    beforeEach(() => {
+        localStorage.clear();
+    });
 
-  it("renders Home component correctly", () => {
-    render(
-      <BrowserRouter>
-        <Home />
-      </BrowserRouter>
-    );
+    it("renders Home component correctly", async () => {
+        (fetchData as jest.Mock).mockResolvedValueOnce({});
+        await act(async () => {
+            render(
+                <BrowserRouter>
+                    <Home />
+                </BrowserRouter>
+            );
+        });
 
-    // Ensure elements are rendered
-    expect(screen.getByLabelText("Filter...")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Reload list" })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: "Saved items" })
-    ).toBeInTheDocument();
-  });
+        // Ensure elements are rendered
+        expect(screen.getByLabelText("Filter...")).toBeInTheDocument();
+        expect(
+            screen.getByRole("button", { name: "Reload list" })
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole("heading", { name: "Saved items" })
+        ).toBeInTheDocument();
+    });
 
-  it("fetches data on component mount", async () => {
-    render(
-      <BrowserRouter>
-        <Home />
-      </BrowserRouter>
-    );
+    it("fetches data on component mount", async () => {
+        (fetchData as jest.Mock).mockResolvedValueOnce({});
+        await act(async () => {
+            render(
+                <BrowserRouter>
+                    <Home />
+                </BrowserRouter>
+            );
+        });
 
-    // Expect fetchData and fetchFavouriteData to be called
-    expect(fetchData).toHaveBeenCalled();
-    expect(fetchFavouriteData).toHaveBeenCalled();
-  });
+        // Expect fetchData and fetchFavouriteData to be called
+        expect(fetchData).toHaveBeenCalled();
+        expect(fetchFavouriteData).toHaveBeenCalled();
+    });
 
-  it("displays error alert when trying to remove without selecting items", () => {
-    render(
-      <BrowserRouter>
-        <Home />
-      </BrowserRouter>
-    );
+    it("displays error alert when trying to remove without selecting items", async () => {
+        (fetchData as jest.Mock).mockResolvedValueOnce({});
+        await act(async () => {
+            render(
+                <BrowserRouter>
+                    <Home />
+                </BrowserRouter>
+            );
+        });
 
-    // Click the "Remove all items" button without selecting items
-    fireEvent.click(screen.getByRole("button", { name: "Remove all items" }));
+        // Click the "Remove all items" button without selecting items
+        fireEvent.click(screen.getByRole("button", { name: "Remove all items" }));
 
-    // Expect error alert to be displayed
-    expect(screen.getByRole("alert")).toBeInTheDocument();
-  });
+        // Expect error alert to be displayed
+        expect(screen.getByRole("alert")).toBeInTheDocument();
+    });
 
 });
