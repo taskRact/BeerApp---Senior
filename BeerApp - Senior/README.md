@@ -9,3 +9,8 @@ We will discuss the proposed solution during the interview. You should be ready 
 - [ ] Home page favourites ~ add a list of favourite beers, do not clean after page reload
 - [ ] Beer list filtering + pagination + sorting
 - [ ] Progressive Web App, offline
+
+- [ ] migrate to vite
+- [ ] add additional features provided by the api
+- [ ] optimize - mainly lint and optimize types
+- [ ] run a security scan for the modules and upgrade what is needed
