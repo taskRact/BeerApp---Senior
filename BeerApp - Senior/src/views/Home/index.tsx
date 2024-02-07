@@ -7,7 +7,7 @@ import styles from './Home.module.css';
 
 const Home = () => {
   const [beerList, setBeerList] = useState<Array<Beer>>([]);
-  const [savedList, setSavedList] = useState<Array<Beer>>([]);
+  const [savedList] = useState<Array<Beer>>([]);
 
   // eslint-disable-next-line
   useEffect(fetchData.bind(this, setBeerList), []);
